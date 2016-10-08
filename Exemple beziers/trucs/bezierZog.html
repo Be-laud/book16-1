@@ -1,0 +1,74 @@
+<html>
+<head>
+</head>
+<body>
+<canvas id="canvas" height="500" width="500"></canvas>
+
+<!- on envoie le script de génération graphique ->
+<script type="text/javascript">
+canvas = document.getElementById("canvas");
+ctx = canvas.getContext("2d");
+
+//épaisseur de trait
+ctx.lineWidth = 1;
+
+
+ctx.fillStyle = "rgba(0, 0, 0, 1.0)";
+ctx.beginPath();
+ctx.fillRect(0, 0, 500, 500);
+ctx.fill();
+
+var angle = 0;
+var delta = Math.PI /4;
+var smallRadius = 100;
+var largeRadius = 400;
+var radius = smallRadius;
+var way = 1;
+var count = 0;
+var petals = 4;
+
+var incr= 0.05;
+var radiusIncr= 5;
+
+var xCenter = 250;
+var yCenter = 250;
+
+function draw(){
+
+  ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+  ctx.fillRect(0, 0, 500, 500);
+  red = parseInt((radius-smallRadius)*1.0/(largeRadius - smallRadius)*255)
+
+  ctx.fillStyle = "rgba("+red+", 0, 0, 1)";
+
+  var petal = 0
+  while(petal < petals){
+    ctx.beginPath();
+    var offset = 2*Math.PI/petals*petal;
+
+    xA = xCenter + radius * Math.cos(angle - delta + offset)
+    xB = xCenter + radius * Math.cos(angle + delta + offset)
+    yA = yCenter + radius * Math.sin(angle - delta + offset)
+    yB = yCenter + radius * Math.sin(angle + delta + offset)
+
+    ctx.moveTo(xCenter, yCenter);
+    ctx.bezierCurveTo(xA, yA ,xB, yB, xCenter, yCenter);
+    petal ++;
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  angle = angle + incr % (Math.PI * 2)
+  radius += way*radiusIncr
+
+  if(radius > largeRadius || radius < smallRadius){
+    way = -way;
+  }
+  requestAnimationFrame(draw)
+}
+
+draw()
+
+</script>
+</body>
+</html>
